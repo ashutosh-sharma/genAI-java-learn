@@ -7,6 +7,7 @@ import com.azure.core.credential.KeyCredential;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
+import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
 import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
 import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
@@ -44,7 +45,24 @@ public class OpenAIService {
                 history.addMessage(result);
             }
         }
+        printChatHistory(history);
         return response.get(0).getContent();
+    }
+
+    public void printChatHistory(ChatHistory history) {
+        System.out.println("Printing Chat History ---->>> ");
+        history.forEach(chatMessageContent -> {
+            String role = chatMessageContent.getAuthorRole().toString().toLowerCase();
+            String content = chatMessageContent.getContent();
+            System.out.printf("%s: %s%n", capitalize(role), content);
+        });
+    }
+
+    private String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 
     private OpenAIAsyncClient createOpenAIAsyncClient() {
@@ -83,6 +101,17 @@ public class OpenAIService {
         Kernel kernel = createKernel(chatCompletionService);
 
         ChatHistory history = new ChatHistory();
+
+        // adding system prompt for better user support
+        history.addSystemMessage("""
+                    You are an assistant designed to help customers with product queries from our list of products.
+                    Available products in store are mentioned below:
+                    1. Mobile
+                    2. Television
+                    3. Headphones
+    
+                    Please assist with product queries, answering questions about the product, and ensuring a smooth experience for user.
+                """);
         history.addUserMessage(prompt);
 
         List<ChatMessageContent<?>> response = fetchChatResponse(chatCompletionService, history,
@@ -96,7 +125,13 @@ public class OpenAIService {
             ChatHistory history,
             Kernel kernel
     ) {
-        InvocationContext optionalInvocationContext = null;
+        // temperature value can be changed from 0.0 to 1.0 which changes response accordingly
+
+        InvocationContext optionalInvocationContext = InvocationContext.builder()
+                .withPromptExecutionSettings(PromptExecutionSettings.builder()
+                        .withTemperature(0.1)
+                        .build())
+                .build();
         return chatCompletionService.getChatMessageContentsAsync(history, kernel,
                 optionalInvocationContext).block();
     }
