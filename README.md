@@ -1,23 +1,49 @@
-# Task 2 - Prompt Engineering
+# Task 3 - Working with Different Models
 
 
-## Tried with different temparature values
+### `/Deployments` API - The API fetches all available Model names that can be passed on while prompting.
 
-The prompt that I tried - "Write a story under 5 sentences, about a cat who goes on an adventure. The setting is a mystical garden filled with magical elements"
+<img width="650" alt="deployment-API-response" src="https://github.com/user-attachments/assets/af99db3c-3afe-4c85-bdba-e6582103d6a9" />
 
-Temparature - 0.9
-```
-{
-    "input": "Write a story under 5 sentences, about a cat who goes on an adventure. The setting is a mystical garden filled with magical elements.",
-    "response": "Whiskers, a curious tabby, stumbled upon a hidden gate that led to a mystical garden where flowers glowed like lanterns and streams whispered secrets. As he padded through, a glimmering butterfly urged him to follow, leading him to a tree heavy with shimmering fruit. When Whiskers batted at one, it burst into stardust, revealing a tiny key that unlocked a treasure chest buried beneath the roots. Inside lay a collar inscribed with runes, granting him the power to leap between worlds. With a flick of his tail, Whiskers vanished, ready to explore realms unknown."
-}
-```
--------------
 
-Temparature - 0.1
-```
-{
-    "input": "Write a story under 5 sentences, about a cat who goes on an adventure. The setting is a mystical garden filled with magical elements.",
-    "response": "Whiskers, a curious tabby, stumbled upon a hidden gate in her backyard that led to a mystical garden shimmering with glowing flowers and floating streams. As she padded through, she discovered a talking butterfly who begged her to retrieve a stolen gem from the mischievous shadow fox. With her sharp claws and clever mind, Whiskers outwitted the fox, snatching the gem and restoring the garden's fading magic. The plants bloomed brighter than ever, and the butterfly gifted her a golden collar that sparkled like starlight. Whiskers returned home, her heart full of wonder, knowing she'd always have a secret world to explore."
-}
-```
+---------------------
+### Prompting with different models
+
+I have provided a system prompt to help users interact with a store that has three items: Mobile, Television, and headphones, see below:
+<img width="796" alt="image" src="https://github.com/user-attachments/assets/d12dc4f6-ef47-4454-9558-f47e1e74adf6" />
+
+---
+
+I tried the prompt, "List all items in the shop—tell me a poem about it," with different models. 
+
+
+### See the responses below for various models and `temperature` values:
+
+
+* Model: gpt-4o
+* Temperature: 0.1
+<img width="650" alt="gpt-4o" src="https://github.com/user-attachments/assets/26e0e408-aa6a-471b-9943-e81817595a98" />
+
+-------------------
+* Model: gpt-4o
+* Temperature: 0.9
+<img width="643" alt="gpt-4o-temp-9" src="https://github.com/user-attachments/assets/c3944935-375b-4b5f-b420-2d13380174b7" />
+
+---------------------------
+* Model: chat-bison
+* Temperature: 0.1
+<img width="644" alt="bison-response" src="https://github.com/user-attachments/assets/ca1adaa3-abd3-4636-af20-2d8f94cef30c" />
+
+----------------------------
+* Model: chat-bison
+* Temperature: 0.9
+<img width="643" alt="bison-temp-9" src="https://github.com/user-attachments/assets/111ec8ee-5d6f-459d-bf55-6a218a1e03e6" />
+
+----------------------------
+* Model: DeepSeek - DeepSeek-R1-Distill-Llama-70B-FP8
+* Temperature: 0.1
+<img width="634" alt="DeepSeek-response" src="https://github.com/user-attachments/assets/beaf0051-5b08-415f-8e65-570599e9eaab" />
+
+
+
+
