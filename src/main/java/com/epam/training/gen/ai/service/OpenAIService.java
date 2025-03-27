@@ -5,6 +5,7 @@ import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.KeyCredential;
 import com.microsoft.semantickernel.Kernel;
+import com.microsoft.semantickernel.aiservices.openai.OpenAiService;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
 import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
@@ -32,6 +33,21 @@ public class OpenAIService {
 
     @Value("${model}")
     private String model;
+
+    private ChatHistory history = new ChatHistory();
+
+    public OpenAIService() {
+        // adding system prompt for better user support
+        history.addSystemMessage("""
+                    You are an assistant designed to help customers with product queries from our list of products.
+                    Available products in store are mentioned below:
+                    1. Mobile
+                    2. Television
+                    3. Headphones
+                    
+                    Please assist with product queries, answering questions about the product, and ensuring a smooth experience for user.
+                """);
+    }
 
     private String processResponse(List<ChatMessageContent<?>> response, ChatHistory history) {
         if (response == null || response.isEmpty()) {
@@ -100,18 +116,6 @@ public class OpenAIService {
         ChatCompletionService chatCompletionService = createChatCompletionService(client);
         Kernel kernel = createKernel(chatCompletionService);
 
-        ChatHistory history = new ChatHistory();
-
-        // adding system prompt for better user support
-        history.addSystemMessage("""
-                    You are an assistant designed to help customers with product queries from our list of products.
-                    Available products in store are mentioned below:
-                    1. Mobile
-                    2. Television
-                    3. Headphones
-    
-                    Please assist with product queries, answering questions about the product, and ensuring a smooth experience for user.
-                """);
         history.addUserMessage(prompt);
 
         List<ChatMessageContent<?>> response = fetchChatResponse(chatCompletionService, history,
