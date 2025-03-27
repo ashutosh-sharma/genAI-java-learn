@@ -5,7 +5,6 @@ import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.KeyCredential;
 import com.microsoft.semantickernel.Kernel;
-import com.microsoft.semantickernel.aiservices.openai.OpenAiService;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
 import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
@@ -95,8 +94,13 @@ public class OpenAIService {
         }
     }
 
-    private ChatCompletionService createChatCompletionService(OpenAIAsyncClient client) {
+    private ChatCompletionService createChatCompletionService(OpenAIAsyncClient client, String dynamicModel) {
         logger.info("Creating chat Completion service");
+
+        if (dynamicModel!= null && !model.equals(dynamicModel)) {
+            model = dynamicModel;
+        }
+        logger.info("Creating chat service with model {}.", model);
         return OpenAIChatCompletion.builder()
                 .withOpenAIAsyncClient(client)
                 .withModelId(model)
@@ -110,10 +114,10 @@ public class OpenAIService {
                 .build();
     }
 
-    public String getChatCompletions(String prompt) {
+    public String getChatCompletions(String prompt, String dynamicModelName) {
         OpenAIAsyncClient client = createOpenAIAsyncClient();
 
-        ChatCompletionService chatCompletionService = createChatCompletionService(client);
+        ChatCompletionService chatCompletionService = createChatCompletionService(client, dynamicModelName);
         Kernel kernel = createKernel(chatCompletionService);
 
         history.addUserMessage(prompt);
@@ -133,7 +137,7 @@ public class OpenAIService {
 
         InvocationContext optionalInvocationContext = InvocationContext.builder()
                 .withPromptExecutionSettings(PromptExecutionSettings.builder()
-                        .withTemperature(0.1)
+                        .withTemperature(0.9)
                         .build())
                 .build();
         return chatCompletionService.getChatMessageContentsAsync(history, kernel,
