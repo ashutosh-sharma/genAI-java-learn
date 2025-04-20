@@ -1,4 +1,33 @@
-# Task 3 - Working with Different Models
+# Task 4 - Semantic Kernel Plugins
+
+### Description 
+Added various semantic kernel plugins - in general, any plugin that can do calculations or provide information outside of model knowledge.
+
+### Samples
+
+#### 1.
+`Prompt - Get the current date`
+
+<img width="608" alt="image" src="https://github.com/user-attachments/assets/050e039b-e2df-445d-8c76-5c6d9573b046" />
+The system has identified that `CurrentDateTimeCalculatorPlugin` plugin should be used to cater to the given prompt, and generated a relevant result.
+
+---
+#### 2. 
+`Prompt - Get the current time`
+<img width="614" alt="image" src="https://github.com/user-attachments/assets/b71b0a22-de7b-40a7-be03-e4e6d7c74230" />
+The system has identified that `CurrentDateTimeCalculatorPlugin` plugin should be used to cater to the given prompt and has generated the relevant result.
+
+---
+#### 3.
+`Prompt - Calculate age based on the given date of birth 1997-01-30`
+<img width="646" alt="image" src="https://github.com/user-attachments/assets/3e4e8718-140c-4f1d-ac71-187323079d71" />
+The system has identified that `AgeCalculatorPlugin` plugin should be used to cater to the given prompt and has generated the relevant result.
+
+
+
+-------------------------
+
+## Task 3 - Working with different models
 
 
 ### `/Deployments` API - The API fetches all available Model names that can be passed on while prompting.
