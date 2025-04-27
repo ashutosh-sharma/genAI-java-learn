@@ -4,10 +4,16 @@ import com.azure.ai.openai.OpenAIAsyncClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.KeyCredential;
+import com.epam.training.gen.ai.plugin.AgeCalculatorPlugin;
+import com.epam.training.gen.ai.plugin.CurrentDateTimeCalculatorPlugin;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
+import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
 import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
+import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
+import com.microsoft.semantickernel.plugin.KernelPlugin;
+import com.microsoft.semantickernel.plugin.KernelPluginFactory;
 import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
 import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
@@ -109,8 +115,15 @@ public class OpenAIService {
 
     private Kernel createKernel(ChatCompletionService chatCompletionService) {
         logger.info("Creating Kernal....");
+
+        logger.info("Adding plugins....");
+        KernelPlugin timePlugin = KernelPluginFactory.createFromObject(new CurrentDateTimeCalculatorPlugin(),"TimePlugin");
+        KernelPlugin agePlugin = KernelPluginFactory.createFromObject(new AgeCalculatorPlugin(),"AgePlugin");
+
         return Kernel.builder()
                 .withAIService(ChatCompletionService.class, chatCompletionService)
+                .withPlugin(timePlugin)
+                .withPlugin(agePlugin)
                 .build();
     }
 
@@ -133,12 +146,13 @@ public class OpenAIService {
             ChatHistory history,
             Kernel kernel
     ) {
-        // temperature value can be changed from 0.0 to 1.0 which changes response accordingly
 
         InvocationContext optionalInvocationContext = InvocationContext.builder()
                 .withPromptExecutionSettings(PromptExecutionSettings.builder()
                         .withTemperature(0.9)
                         .build())
+                .withReturnMode(InvocationReturnMode.LAST_MESSAGE_ONLY)
+                .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
                 .build();
         return chatCompletionService.getChatMessageContentsAsync(history, kernel,
                 optionalInvocationContext).block();
