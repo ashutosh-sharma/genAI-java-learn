@@ -55,6 +55,7 @@ I tried the prompt, "List all items in the shop—tell me a poem about it," with
 This needs to set up a Qdrant client to interact with the Qdrant vector database service running in a Local Docker container.
 Qdrant? - High-Scale Vector Database
 
+Qdrant dashboard URL - `http://localhost:6333/dashboard#/welcome`
 
 `/embeddings/build` - Build Embedding from Text
 <img width="632" alt="image" src="https://github.com/user-attachments/assets/e5b333dd-0eae-4f3f-96bc-45b909e06651" />
