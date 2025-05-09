@@ -42,16 +42,7 @@ public class OpenAIService {
     private ChatHistory history = new ChatHistory();
 
     public OpenAIService() {
-        // adding system prompt for better user support
-        history.addSystemMessage("""
-                    You are an assistant designed to help customers with product queries from our list of products.
-                    Available products in store are mentioned below:
-                    1. Mobile
-                    2. Television
-                    3. Headphones
-                    
-                    Please assist with product queries, answering questions about the product, and ensuring a smooth experience for user.
-                """);
+        // can configure system prompt for better user support
     }
 
     private String processResponse(List<ChatMessageContent<?>> response, ChatHistory history) {

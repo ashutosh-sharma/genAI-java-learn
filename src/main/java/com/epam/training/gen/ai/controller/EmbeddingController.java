@@ -43,7 +43,7 @@ public class EmbeddingController {
             validateInputText(request.getText());
             System.out.println("Text: " + request.getText());
 
-            String status = embeddingService.buildAndStoreEmbedding(request.getText());
+            String status = embeddingService.buildAndStoreEmbedding(request.getText(), null);
             return ResponseEntity.ok(status);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

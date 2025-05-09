@@ -11,12 +11,14 @@ import com.azure.ai.openai.models.EmbeddingsOptions;
 import com.epam.training.gen.ai.dto.ScoredPointDto;
 import io.qdrant.client.QdrantClient;
 import io.qdrant.client.grpc.Collections;
+import io.qdrant.client.grpc.JsonWithInt;
 import io.qdrant.client.grpc.Points.PointStruct;
 import io.qdrant.client.grpc.Points.ScoredPoint;
 import io.qdrant.client.grpc.Points.SearchPoints;
 import io.qdrant.client.grpc.Points.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -68,11 +70,11 @@ public class EmbeddingService {
         }
     }
 
-    public String buildAndStoreEmbedding(String text)
+    public String buildAndStoreEmbedding(String text, Map<String, JsonWithInt.Value> payload)
             throws ExecutionException, InterruptedException {
 
         List<EmbeddingItem> embeddings = buildEmbedding(text);
-        return saveEmbedding(embeddings);
+        return saveEmbedding(embeddings, payload);
     }
 
     private static List<PointStruct> getPointStructs(List<EmbeddingItem> embeddings) {
@@ -117,16 +119,24 @@ public class EmbeddingService {
                     scoredPointDto.setUuid(scoredPoint.getId().getUuid());
                     scoredPointDto.setScore(scoredPoint.getScore());
                     scoredPointDto.setEmbeddingPoints(scoredPoint.getVectors().getVector().getDataList());
+                    scoredPointDto.setPayload(scoredPoint.getPayloadMap().entrySet()
+                            .stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
                     return scoredPointDto;
                 })
                 .collect(Collectors.toList());
     }
 
-    private String saveEmbedding(List<EmbeddingItem> embeddings)
+    private String saveEmbedding(List<EmbeddingItem> embeddings, Map<String, JsonWithInt.Value> payload)
             throws InterruptedException, ExecutionException {
 
         createCollectionIfNotExists();
-        List<PointStruct> pointStructs = getPointStructs(embeddings);
+        List<PointStruct> pointStructs;
+        if (payload != null) {
+            pointStructs = getPointStructsWithPayload(embeddings, payload);
+        } else {
+            pointStructs = getPointStructs(embeddings);
+        }
 
         UpdateResult updateResult;
         try {
@@ -139,6 +149,17 @@ public class EmbeddingService {
         return updateResult.getStatus().name();
     }
 
+    private static List<PointStruct> getPointStructsWithPayload(List<EmbeddingItem> embeddings,
+                                                                Map<String, JsonWithInt.Value> payload) {
+        return embeddings.stream().map(embedding -> {
+            UUID id = UUID.randomUUID();
+            return PointStruct.newBuilder()
+                    .setId(id(id))
+                    .setVectors(vectors(embedding.getEmbedding()))
+                    .putAllPayload(payload)
+                    .build();
+        }).collect(Collectors.toList());
+    }
 
     private void createCollectionIfNotExists() throws ExecutionException, InterruptedException {
         if (qdrantClient.collectionExistsAsync(COLLECTION_NAME).get()) {

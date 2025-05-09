@@ -47,8 +47,6 @@ I tried the prompt, "List all items in the shop—tell me a poem about it," with
 
 ----------------------------
 ----------------------------
-----------------------------
-----------------------------
 
 # Task 5: Embeddings (Using Qdrant)
 ------------------
@@ -75,5 +73,17 @@ Qdrant dashboard URL - `http://localhost:6333/dashboard#/welcome`
 <img width="629" alt="image" src="https://github.com/user-attachments/assets/3d4a5391-5849-463c-b295-9a711109e541" />
 
 
+
+
+----------------------------
+------------------------------------------------
+# Task 6 - RAG (Retrieval Augmented Generation)
+ - Text Generation Based on Knowledge Sources
+
+### How to?
+ - Two endpoints can be used to provide the knowledge base
+     - via file: `rag/source/upload/file`
+     - via URL: `rag/source/upload/url`
+ - Use `rag/prompt` to prompt from the knowledge base. 
 
 
