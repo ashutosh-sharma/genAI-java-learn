@@ -45,5 +45,15 @@ I tried the prompt, "List all items in the shop—tell me a poem about it," with
 <img width="634" alt="DeepSeek-response" src="https://github.com/user-attachments/assets/beaf0051-5b08-415f-8e65-570599e9eaab" />
 
 
+------------------------------------------------
+# Task 6 - RAG (Retrieval Augmented Generation)
+ - Text Generation Based on Knowledge Sources
+
+### How to?
+ - Two endpoints can be used to provide the knowledge base
+     - via file: `rag/source/upload/file`
+     - via URL: `rag/source/upload/url`
+ - Use `rag/prompt` to prompt from the knowledge base. 
+
 
 
