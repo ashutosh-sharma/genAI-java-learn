@@ -45,6 +45,37 @@ I tried the prompt, "List all items in the shop—tell me a poem about it," with
 <img width="634" alt="DeepSeek-response" src="https://github.com/user-attachments/assets/beaf0051-5b08-415f-8e65-570599e9eaab" />
 
 
+----------------------------
+----------------------------
+
+# Task 5: Embeddings (Using Qdrant)
+------------------
+This needs to set up a Qdrant client to interact with the Qdrant vector database service running in a Local Docker container.
+Qdrant? - High-Scale Vector Database
+
+Qdrant dashboard URL - `http://localhost:6333/dashboard#/welcome`
+
+`/embeddings/build` - Build Embedding from Text
+<img width="632" alt="image" src="https://github.com/user-attachments/assets/e5b333dd-0eae-4f3f-96bc-45b909e06651" />
+
+
+`/embeddings/build-and-store` - Build and store Embedding in Qdrant
+<img width="632" alt="image" src="https://github.com/user-attachments/assets/dfc39881-6589-4637-aee0-7c330d39716e" />
+
+
+`/embeddings/search` - Search for closest Embeddings
+
+----
+### Search for - Mug
+<img width="615" alt="image" src="https://github.com/user-attachments/assets/e42a2e67-22e9-4e87-9d78-5391eeaa681e" />
+
+### Search for - Cup
+<img width="629" alt="image" src="https://github.com/user-attachments/assets/3d4a5391-5849-463c-b295-9a711109e541" />
+
+
+
+
+----------------------------
 ------------------------------------------------
 # Task 6 - RAG (Retrieval Augmented Generation)
  - Text Generation Based on Knowledge Sources
@@ -54,6 +85,5 @@ I tried the prompt, "List all items in the shop—tell me a poem about it," with
      - via file: `rag/source/upload/file`
      - via URL: `rag/source/upload/url`
  - Use `rag/prompt` to prompt from the knowledge base. 
-
 
 
